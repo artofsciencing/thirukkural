@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wisdom Kural — Thirukkural</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Noto+Serif+Tamil:wght@300;400;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold: #c9a84c;
+      --gold-light: #e8c97a;
+      --gold-dim: #8a6f2e;
+      --ink: #0f0c08;
+      --parchment: #f5eed8;
+      --parchment-mid: #ede0c0;
+      --red-accent: #8b2e2e;
+      --cream: #faf6ee;
+      --text-body: #2c2416;
+      --text-muted: #7a6b52;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'EB Garamond', Georgia, serif;
+      background-color: var(--ink);
+      color: var(--parchment);
+      overflow-x: hidden;
+      cursor: default;
+    }
+
+    /* ── CUSTOM CURSOR ── */
+    .cursor-dot {
+      position: fixed;
+      width: 6px; height: 6px;
+      background: var(--gold);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s;
+    }
+    .cursor-ring {
+      position: fixed;
+      width: 28px; height: 28px;
+      border: 1px solid rgba(201,168,76,0.5);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: all 0.15s ease;
+    }
+
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.4;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      padding: 4rem 2rem;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 40%, rgba(140,100,30,0.18) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 30% at 20% 80%, rgba(139,46,46,0.12) 0%, transparent 60%),
+        linear-gradient(175deg, #1a1408 0%, #0f0c08 50%, #0d0b06 100%);
+    }
+
+    /* Decorative circular mandala */
+    .mandala {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px; height: 600px;
+      opacity: 0.06;
+      animation: slowSpin 80s linear infinite;
+    }
+    @keyframes slowSpin { to { transform: translate(-50%, -50%) rotate(360deg); } }
+
+    .hero-eyebrow {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 1s 0.3s forwards;
+      position: relative;
+      z-index: 2;
+    }
+    .hero-eyebrow::before,
+    .hero-eyebrow::after {
+      content: '';
+      display: inline-block;
+      width: 40px; height: 1px;
+      background: var(--gold-dim);
+      vertical-align: middle;
+      margin: 0 14px;
+    }
+
+    .hero-tamil {
+      font-family: 'Noto Serif Tamil', serif;
+      font-size: clamp(2.2rem, 6vw, 4.5rem);
+      font-weight: 300;
+      color: var(--gold-light);
+      line-height: 1.3;
+      text-align: center;
+      letter-spacing: 0.02em;
+      opacity: 0;
+      animation: fadeUp 1s 0.5s forwards;
+      position: relative; z-index: 2;
+      text-shadow: 0 0 60px rgba(201,168,76,0.3);
+    }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--parchment-mid);
+      margin-top: 1.2rem;
+      letter-spacing: 0.08em;
+      opacity: 0;
+      animation: fadeUp 1s 0.7s forwards;
+      position: relative; z-index: 2;
+    }
+
+    .hero-divider {
+      width: 120px; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 2.5rem auto;
+      opacity: 0;
+      animation: fadeUp 1s 0.9s forwards;
+      position: relative; z-index: 2;
+    }
+
+    .hero-desc {
+      max-width: 560px;
+      text-align: center;
+      font-size: 1.15rem;
+      line-height: 1.85;
+      color: var(--text-muted);
+      color: #a8977a;
+      opacity: 0;
+      animation: fadeUp 1s 1.1s forwards;
+      position: relative; z-index: 2;
+    }
+
+    .hero-cta {
+      margin-top: 3rem;
+      opacity: 0;
+      animation: fadeUp 1s 1.3s forwards;
+      position: relative; z-index: 2;
+      display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      padding: 0.85rem 2.2rem;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.9rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      text-decoration: none;
+      position: relative;
+      overflow: hidden;
+      transition: color 0.4s;
+    }
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--gold);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s ease;
+      z-index: -1;
+    }
+    .btn-primary:hover { color: var(--ink); }
+    .btn-primary:hover::before { transform: scaleX(1); }
+
+    .btn-secondary {
+      display: inline-block;
+      padding: 0.85rem 2.2rem;
+      color: #a8977a;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.9rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: 1px solid rgba(168,151,122,0.3);
+      transition: border-color 0.3s, color 0.3s;
+    }
+    .btn-secondary:hover { border-color: #a8977a; color: var(--parchment); }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      opacity: 0;
+      animation: fadeUp 1s 2s forwards;
+      z-index: 2;
+    }
+    .scroll-indicator span {
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+    }
+    .scroll-line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, var(--gold-dim), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.3; transform: scaleY(1); }
+      50% { opacity: 1; transform: scaleY(1.2); }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── STATS BAND ── */
+    .stats-band {
+      background: #13100a;
+      border-top: 1px solid rgba(201,168,76,0.15);
+      border-bottom: 1px solid rgba(201,168,76,0.15);
+      padding: 3rem 2rem;
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      flex-wrap: wrap;
+      position: relative; z-index: 2;
+    }
+    .stat-item {
+      flex: 1;
+      min-width: 160px;
+      max-width: 220px;
+      text-align: center;
+      padding: 1.5rem 2rem;
+      border-right: 1px solid rgba(201,168,76,0.12);
+      position: relative;
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3rem;
+      font-weight: 300;
+      color: var(--gold);
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+    .stat-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      margin-top: 0.5rem;
+    }
+
+    /* ── SECTION COMMON ── */
+    section { position: relative; z-index: 2; }
+    .section-header {
+      text-align: center;
+      padding: 5rem 2rem 3rem;
+    }
+    .section-tag {
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+      display: block;
+    }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 300;
+      color: var(--parchment);
+      line-height: 1.2;
+    }
+    .section-sub {
+      font-size: 1rem;
+      color: #7a6b52;
+      margin-top: 1rem;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.8;
+    }
+
+    /* ── FEATURED KURAL ── */
+    .featured {
+      background: #13100a;
+      padding: 5rem 2rem;
+    }
+    .featured-inner {
+      max-width: 860px;
+      margin: 0 auto;
+      border: 1px solid rgba(201,168,76,0.2);
+      padding: 4rem;
+      position: relative;
+      background: rgba(201,168,76,0.03);
+    }
+    .featured-inner::before,
+    .featured-inner::after {
+      content: '';
+      position: absolute;
+      width: 18px; height: 18px;
+      border-color: var(--gold);
+      border-style: solid;
+    }
+    .featured-inner::before {
+      top: -1px; left: -1px;
+      border-width: 2px 0 0 2px;
+    }
+    .featured-inner::after {
+      bottom: -1px; right: -1px;
+      border-width: 0 2px 2px 0;
+    }
+
+    .featured-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.3em;
+      color: var(--gold-dim);
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+    }
+    .featured-tamil {
+      font-family: 'Noto Serif Tamil', serif;
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      line-height: 1.9;
+      color: var(--gold-light);
+      margin-bottom: 2rem;
+      font-weight: 300;
+    }
+    .featured-transliteration {
+      font-style: italic;
+      font-size: 1.1rem;
+      color: #a8977a;
+      line-height: 1.8;
+      margin-bottom: 2rem;
+      padding-left: 1.5rem;
+      border-left: 2px solid var(--gold-dim);
+    }
+    .featured-meaning {
+      font-size: 1.15rem;
+      line-height: 1.9;
+      color: var(--parchment-mid);
+    }
+    .featured-chapter {
+      margin-top: 2.5rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .featured-chapter::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(201,168,76,0.15);
+    }
+
+    /* ── KURAL GRID ── */
+    .kurals-section {
+      padding: 2rem 2rem 6rem;
+    }
+    .kurals-filter {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 3rem;
+    }
+    .filter-btn {
+      padding: 0.55rem 1.4rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.12em;
+      border: 1px solid rgba(201,168,76,0.25);
+      background: transparent;
+      color: #a8977a;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .filter-btn.active,
+    .filter-btn:hover {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: var(--ink);
+    }
+
+    .kurals-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1.5px;
+      max-width: 1200px;
+      margin: 0 auto;
+      background: rgba(201,168,76,0.1);
+    }
+
+    .kural-card {
+      background: #0f0c08;
+      padding: 2.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.4s;
+      cursor: pointer;
+    }
+    .kural-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(201,168,76,0.05) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+    .kural-card:hover { background: #141009; }
+    .kural-card:hover::after { opacity: 1; }
+
+    .kural-card-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.5rem;
+      font-weight: 300;
+      color: rgba(201,168,76,0.15);
+      line-height: 1;
+      margin-bottom: 1.2rem;
+      letter-spacing: -0.03em;
+    }
+    .kural-card-tamil {
+      font-family: 'Noto Serif Tamil', serif;
+      font-size: 1.05rem;
+      line-height: 2;
+      color: var(--gold-light);
+      font-weight: 300;
+      margin-bottom: 1.2rem;
+    }
+    .kural-card-meaning {
+      font-size: 0.95rem;
+      line-height: 1.8;
+      color: #7a6b52;
+      border-top: 1px solid rgba(201,168,76,0.1);
+      padding-top: 1.2rem;
+    }
+    .kural-card-tag {
+      position: absolute;
+      top: 1.5rem; right: 1.5rem;
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      opacity: 0.7;
+    }
+
+    /* ── CHAPTERS SECTION ── */
+    .chapters-section {
+      background: #13100a;
+      padding: 5rem 2rem;
+    }
+    .chapters-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1px;
+      max-width: 1100px;
+      margin: 0 auto;
+      background: rgba(201,168,76,0.08);
+    }
+    .chapter-item {
+      background: #13100a;
+      padding: 1.8rem 1.5rem;
+      transition: background 0.3s;
+      cursor: pointer;
+      position: relative;
+    }
+    .chapter-item:hover { background: #18130d; }
+    .chapter-item:hover .chapter-num { color: var(--gold); }
+    .chapter-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      color: var(--gold-dim);
+      margin-bottom: 0.5rem;
+      transition: color 0.3s;
+    }
+    .chapter-name {
+      font-size: 0.95rem;
+      color: var(--parchment-mid);
+      font-style: italic;
+    }
+    .chapter-name-tamil {
+      font-family: 'Noto Serif Tamil', serif;
+      font-size: 0.85rem;
+      color: #5a4e38;
+      margin-top: 0.3rem;
+    }
+
+    /* ── QUOTE SECTION ── */
+    .quote-section {
+      padding: 7rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .quote-section::before {
+      content: '"';
+      position: absolute;
+      top: -2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20rem;
+      color: rgba(201,168,76,0.04);
+      line-height: 1;
+      pointer-events: none;
+    }
+    .quote-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      font-style: italic;
+      font-weight: 300;
+      max-width: 780px;
+      margin: 0 auto;
+      line-height: 1.6;
+      color: var(--parchment);
+      position: relative; z-index: 1;
+    }
+    .quote-source {
+      margin-top: 2rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+    }
+
+    /* ── SEARCH BAR ── */
+    .search-section {
+      background: #13100a;
+      padding: 4rem 2rem;
+      border-top: 1px solid rgba(201,168,76,0.1);
+    }
+    .search-inner {
+      max-width: 620px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .search-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      display: block;
+      margin-bottom: 1.5rem;
+    }
+    .search-wrap {
+      position: relative;
+    }
+    .search-input {
+      width: 100%;
+      background: rgba(201,168,76,0.04);
+      border: 1px solid rgba(201,168,76,0.2);
+      padding: 1rem 3.5rem 1rem 1.5rem;
+      font-family: 'EB Garamond', serif;
+      font-size: 1rem;
+      color: var(--parchment);
+      outline: none;
+      transition: border-color 0.3s;
+    }
+    .search-input::placeholder { color: #5a4e38; }
+    .search-input:focus { border-color: var(--gold); }
+    .search-btn {
+      position: absolute;
+      right: 0; top: 0; bottom: 0;
+      padding: 0 1.2rem;
+      background: var(--gold);
+      border: none;
+      cursor: pointer;
+      color: var(--ink);
+      font-size: 1rem;
+      transition: background 0.3s;
+    }
+    .search-btn:hover { background: var(--gold-light); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #0a0804;
+      border-top: 1px solid rgba(201,168,76,0.12);
+      padding: 4rem 2rem 3rem;
+      text-align: center;
+      position: relative; z-index: 2;
+    }
+    .footer-logo {
+      font-family: 'Noto Serif Tamil', serif;
+      font-size: 1.5rem;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+    .footer-sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      color: var(--gold-dim);
+      font-size: 0.9rem;
+      margin-bottom: 2rem;
+    }
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 3rem;
+    }
+    .footer-links a {
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #5a4e38;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .footer-links a:hover { color: var(--gold); }
+    .footer-copy {
+      font-size: 0.78rem;
+      color: #3a3025;
+    }
+    .footer-ornament {
+      font-family: 'Noto Serif Tamil', serif;
+      font-size: 1.2rem;
+      color: rgba(201,168,76,0.2);
+      margin-bottom: 1.5rem;
+    }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10,8,4,0.95);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s;
+    }
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .modal {
+      max-width: 680px;
+      width: 100%;
+      border: 1px solid rgba(201,168,76,0.25);
+      background: #12100a;
+      padding: 3rem;
+      position: relative;
+      transform: translateY(30px);
+      transition: transform 0.4s;
+    }
+    .modal-overlay.open .modal { transform: translateY(0); }
+    .modal-close {
+      position: absolute;
+      top: 1.2rem; right: 1.5rem;
+      background: none;
+      border: none;
+      color: var(--gold-dim);
+      font-size: 1.5rem;
+      cursor: pointer;
+      line-height: 1;
+      transition: color 0.2s;
+    }
+    .modal-close:hover { color: var(--gold); }
+
+    /* ── REVEAL ANIMATION ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 680px) {
+      .featured-inner { padding: 2rem; }
+      .stats-band { gap: 0; }
+      .stat-item { min-width: 130px; }
+      .kurals-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- ══ HERO ══ -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <svg class="mandala" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="200" cy="200" r="198" stroke="#c9a84c" stroke-width="0.5"/>
+      <circle cx="200" cy="200" r="170" stroke="#c9a84c" stroke-width="0.3"/>
+      <circle cx="200" cy="200" r="140" stroke="#c9a84c" stroke-width="0.5"/>
+      <circle cx="200" cy="200" r="110" stroke="#c9a84c" stroke-width="0.3"/>
+      <circle cx="200" cy="200" r="80" stroke="#c9a84c" stroke-width="0.5"/>
+      <circle cx="200" cy="200" r="50" stroke="#c9a84c" stroke-width="0.3"/>
+      <g stroke="#c9a84c" stroke-width="0.4">
+        <line x1="200" y1="2" x2="200" y2="398"/>
+        <line x1="2" y1="200" x2="398" y2="200"/>
+        <line x1="59" y1="59" x2="341" y2="341"/>
+        <line x1="341" y1="59" x2="59" y2="341"/>
+        <line x1="200" y1="30" x2="370" y2="300"/>
+        <line x1="200" y1="30" x2="30" y2="300"/>
+        <line x1="200" y1="370" x2="370" y2="100"/>
+        <line x1="200" y1="370" x2="30" y2="100"/>
+      </g>
+      <polygon points="200,40 360,160 300,340 100,340 40,160" stroke="#c9a84c" stroke-width="0.4" fill="none"/>
+      <polygon points="200,360 360,240 300,60 100,60 40,240" stroke="#c9a84c" stroke-width="0.3" fill="none"/>
+    </svg>
+
+    <p class="hero-eyebrow">திருக்குறள் &nbsp;·&nbsp; Est. 300 BCE</p>
+    <h1 class="hero-tamil">திருக்குறள்</h1>
+    <p class="hero-title">Thirukkural — The Sacred Couplets of Thiruvalluvar</p>
+    <div class="hero-divider"></div>
+    <p class="hero-desc">
+      1,330 couplets of timeless wisdom — spanning virtue, wealth, and love —
+      distilled into seven words apiece. The universal scripture of Tamil civilization.
+    </p>
+    <div class="hero-cta">
+      <a href="#explore" class="btn-primary">Explore the Kurals</a>
+      <a href="#chapters" class="btn-secondary">Browse Chapters</a>
+    </div>
+
+    <div class="scroll-indicator">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ══ STATS ══ -->
+  <div class="stats-band reveal">
+    <div class="stat-item">
+      <div class="stat-number">1330</div>
+      <div class="stat-label">Sacred Couplets</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">133</div>
+      <div class="stat-label">Chapters</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">3</div>
+      <div class="stat-label">Books</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">40+</div>
+      <div class="stat-label">Languages Translated</div>
+    </div>
+  </div>
+
+  <!-- ══ FEATURED KURAL ══ -->
+  <section class="featured" id="explore">
+    <div class="section-header reveal">
+      <span class="section-tag">Daily Wisdom</span>
+      <h2 class="section-title">Kural of the Day</h2>
+      <p class="section-sub">Each couplet — a universe of meaning in fourteen syllables.</p>
+    </div>
+
+    <div class="featured-inner reveal">
+      <div class="featured-number">Kural · 1 &nbsp;|&nbsp; Chapter 1: In Praise of God</div>
+      <p class="featured-tamil">
+        அகர முதல எழுத்தெல்லாம் ஆதி<br>
+        பகவன் முதற்றே உலகு.
+      </p>
+      <p class="featured-transliteration">
+        Agara mudhala ezhuttellam aadhi<br>
+        Bagavan mudharre ulagu.
+      </p>
+      <p class="featured-meaning">
+        As the letter 'A' is the first of all letters, so the eternal God is first in the world.
+        Just as every letter of the alphabet begins with the sound "A," the universe itself
+        begins with and rests upon the primordial, eternal Lord.
+      </p>
+      <div class="featured-chapter">
+        அறத்துப்பால் · Aṟattuppāl · The Book of Virtue
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ KURAL GRID ══ -->
+  <section class="kurals-section">
+    <div class="section-header reveal">
+      <span class="section-tag">Collections</span>
+      <h2 class="section-title">Selected Couplets</h2>
+    </div>
+
+    <div class="kurals-filter reveal">
+      <button class="filter-btn active" onclick="filterKurals('all', this)">All</button>
+      <button class="filter-btn" onclick="filterKurals('virtue', this)">Virtue</button>
+      <button class="filter-btn" onclick="filterKurals('wealth', this)">Wealth</button>
+      <button class="filter-btn" onclick="filterKurals('love', this)">Love</button>
+    </div>
+
+    <div class="kurals-grid" id="kuralsGrid">
+      <!-- Cards injected via JS -->
+    </div>
+  </section>
+
+  <!-- ══ QUOTE ══ -->
+  <section class="quote-section reveal">
+    <p class="quote-text">
+      "Even in the realm of heaven, they who stand in the forefront are those
+      who have never swerved from justice."
+    </p>
+    <p class="quote-source">Thirukkural · 541 &nbsp;·&nbsp; On Justice</p>
+  </section>
+
+  <!-- ══ CHAPTERS ══ -->
+  <section class="chapters-section" id="chapters">
+    <div class="section-header reveal">
+      <span class="section-tag">Structure</span>
+      <h2 class="section-title">The 133 Chapters</h2>
+      <p class="section-sub">Organized across three books — Virtue, Wealth, and Love.</p>
+    </div>
+
+    <div class="chapters-grid reveal" id="chaptersGrid">
+      <!-- Injected via JS -->
+    </div>
+  </section>
+
+  <!-- ══ SEARCH ══ -->
+  <section class="search-section reveal">
+    <div class="search-inner">
+      <span class="search-label">Search the Kurals</span>
+      <div class="search-wrap">
+        <input type="text" class="search-input" placeholder="Search by theme, word, or number…" id="searchInput" />
+        <button class="search-btn" onclick="performSearch()">⌕</button>
+      </div>
+      <div id="searchResults" style="margin-top:1.5rem; text-align:left;"></div>
+    </div>
+  </section>
+
+  <!-- ══ FOOTER ══ -->
+  <footer>
+    <div class="footer-ornament">❧</div>
+    <div class="footer-logo">திருக்குறள்</div>
+    <div class="footer-sub">Thirukkural — The Universal Scripture</div>
+    <div class="footer-links">
+      <a href="#">About Thiruvalluvar</a>
+      <a href="#">Book of Virtue</a>
+      <a href="#">Book of Wealth</a>
+      <a href="#">Book of Love</a>
+      <a href="#">Translations</a>
+      <a href="#">Commentary</a>
+    </div>
+    <div class="footer-ornament" style="margin-bottom:1rem;">※</div>
+    <p class="footer-copy">Timeless wisdom of Tamil civilization · திருவள்ளுவர்</p>
+  </footer>
+
+  <!-- ══ MODAL ══ -->
+  <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+    <div class="modal" id="modal">
+      <button class="modal-close" onclick="closeModalBtn()">×</button>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <script>
+    /* ── Custom cursor ── */
+    const dot = document.getElementById('cursorDot');
+    const ring = document.getElementById('cursorRing');
+    document.addEventListener('mousemove', e => {
+      dot.style.left = e.clientX + 'px';
+      dot.style.top  = e.clientY + 'px';
+      setTimeout(() => {
+        ring.style.left = e.clientX + 'px';
+        ring.style.top  = e.clientY + 'px';
+      }, 60);
+    });
+
+    /* ── Reveal on scroll ── */
+    const reveals = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver(entries => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('visible'), i * 80);
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    reveals.forEach(el => io.observe(el));
+
+    /* ── Data ── */
+    const kurals = [
+      { num: 1, tamil: 'அகர முதல எழுத்தெல்லாம் ஆதி பகவன் முதற்றே உலகு.', meaning: 'As the letter "A" is first of all letters, so God is first in the world.', book: 'virtue', chapter: 'In Praise of God' },
+      { num: 2, tamil: 'கற்றதனால் ஆய பயனென்கொல் வாலறிவன் நற்றாள் தொழாஅர் எனின்.', meaning: 'What is the use of learning if one does not worship the feet of the Pure One?', book: 'virtue', chapter: 'In Praise of God' },
+      { num: 21, tamil: 'ஒழுக்கம் விழுப்பந் தரலான் ஒழுக்கம் உயிரினும் ஓம்பப் படும்.', meaning: 'Virtue of conduct gives dignity; it should be guarded more than life itself.', book: 'virtue', chapter: 'Righteousness' },
+      { num: 101, tamil: 'அன்பிலார் எல்லாம் தமக்குரியர் அன்புடையார் என்பும் உரியர் பிறர்க்கு.', meaning: 'Those without love possess all things for themselves; those with love offer even their bones to others.', book: 'virtue', chapter: 'Love' },
+      { num: 331, tamil: 'அறன் ஈனும் இன்பமும் ஈனும் திறனறிந்து தீதின்றி வந்த பொருள்.', meaning: 'Wealth that comes without wrongdoing gives virtue and pleasure alike.', book: 'wealth', chapter: 'Greatness of Wealth' },
+      { num: 431, tamil: 'வினைத்திட்பம் என்பது ஒருவன் மனத்திட்பம் மற்றெல்லாம் வேற்று புணை.', meaning: 'True strength of action lies in strength of mind; all else is but a borrowed raft.', book: 'wealth', chapter: 'Courage' },
+      { num: 551, tamil: 'அறிவுடையார் ஆவ தறிவார் அறிவிலார் அஃதறி கல்லாதவர்.', meaning: 'The wise know what becomes them; the ignorant cannot perceive it.', book: 'wealth', chapter: 'Learning' },
+      { num: 1081, tamil: 'நோக்கினாள் நோக்கி இறைஞ்சினாள் அஃதவள் யாப்பினுள் யாப்பு என் நலம்.', meaning: 'She looked, then bowed her eyes — that glance was the bond of bonds to my heart.', book: 'love', chapter: 'First Meeting' },
+      { num: 1221, tamil: 'படலர்க் கனவும் இனிதே தொடலரிய தன்னை உறும் வரைக்கண்.', meaning: 'Even dreaming of one untouchable to waking hands is sweet solace.', book: 'love', chapter: 'Yearning' },
+      { num: 390, tamil: 'தீயவை செய்தார் கெடுவர்; விழுமியோர் நல்லவை செய்தே நிலைபெறுவர்.', meaning: 'Those who do evil will perish; the virtuous who do good shall endure.', book: 'virtue', chapter: 'Avoiding Evil' },
+      { num: 501, tamil: 'இன்னாசெய் தாரை ஒறுத்தல் அவர்நாண நன்னயம் செய்து விடல்.', meaning: 'To punish wrong is best done by shaming the wrongdoer through kindness in return.', book: 'wealth', chapter: 'Justice' },
+      { num: 400, tamil: 'கண்ணோட்டம் என்பது கழிபெருங் காரிணம் நண்ணோடும் சான்றோர்க்கு அணி.', meaning: 'Compassion of sight is the ornament of the worthy who approach others with grace.', book: 'virtue', chapter: 'Compassion' },
+    ];
+
+    const chapters = [
+      { num: '01', name: 'In Praise of God', tamil: 'கடவுள் வாழ்த்து', book: 'virtue' },
+      { num: '02', name: 'The Excellence of Rain', tamil: 'வான்சிறப்பு', book: 'virtue' },
+      { num: '03', name: 'The Greatness of Ascetics', tamil: 'நீத்தார் பெருமை', book: 'virtue' },
+      { num: '04', name: 'Assertion of the Strength of Virtue', tamil: 'அறன்வலியுறுத்தல்', book: 'virtue' },
+      { num: '05', name: 'Domestic Life', tamil: 'இல்வாழ்க்கை', book: 'virtue' },
+      { num: '06', name: 'The Good Wife', tamil: 'வாழ்க்கைத் துணைநலம்', book: 'virtue' },
+      { num: '07', name: 'The Blessing of Children', tamil: 'மக்கட்பேறு', book: 'virtue' },
+      { num: '08', name: 'Love', tamil: 'அன்பு', book: 'virtue' },
+      { num: '09', name: 'Hospitality', tamil: 'விருந்தோம்பல்', book: 'virtue' },
+      { num: '10', name: 'Courteous Speech', tamil: 'இனியவை கூறல்', book: 'virtue' },
+      { num: '11', name: 'Gratitude', tamil: 'செய்ந்நன்றி அறிதல்', book: 'virtue' },
+      { num: '12', name: 'Impartiality', tamil: 'நடுவு நிலைமை', book: 'virtue' },
+      { num: '34', name: 'Greatness of Wealth', tamil: 'பொருளாட்சி', book: 'wealth' },
+      { num: '55', name: 'The Learned', tamil: 'கல்வி', book: 'wealth' },
+      { num: '72', name: 'On Justice', tamil: 'நீதி', book: 'wealth' },
+      { num: '109', name: 'First Meeting', tamil: 'தகையணங்குறுத்தல்', book: 'love' },
+      { num: '122', name: 'Yearning', tamil: 'நினைந்தவர்', book: 'love' },
+      { num: '133', name: 'Sulking', tamil: 'ஊடலுவகை', book: 'love' },
+    ];
+
+    /* ── Render Kural cards ── */
+    function renderKurals(data) {
+      const grid = document.getElementById('kuralsGrid');
+      grid.innerHTML = data.map(k => `
+        <div class="kural-card" onclick="openModal(${k.num})" data-book="${k.book}">
+          <div class="kural-card-tag">${k.chapter}</div>
+          <div class="kural-card-number">${String(k.num).padStart(4,'0')}</div>
+          <p class="kural-card-tamil">${k.tamil}</p>
+          <p class="kural-card-meaning">${k.meaning}</p>
+        </div>
+      `).join('');
+    }
+    renderKurals(kurals);
+
+    /* ── Render chapters ── */
+    const chGrid = document.getElementById('chaptersGrid');
+    chGrid.innerHTML = chapters.map(c => `
+      <div class="chapter-item">
+        <div class="chapter-num">Ch. ${c.num}</div>
+        <div class="chapter-name">${c.name}</div>
+        <div class="chapter-name-tamil">${c.tamil}</div>
+      </div>
+    `).join('');
+
+    /* ── Filter ── */
+    function filterKurals(book, btn) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filtered = book === 'all' ? kurals : kurals.filter(k => k.book === book);
+      renderKurals(filtered);
+    }
+
+    /* ── Modal ── */
+    function openModal(num) {
+      const k = kurals.find(x => x.num === num);
+      if (!k) return;
+      document.getElementById('modalContent').innerHTML = `
+        <div style="font:0.7rem/1 'Cormorant Garamond',serif;letter-spacing:0.25em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:1.5rem;">
+          Kural · ${k.num} &nbsp;|&nbsp; ${k.chapter}
+        </div>
+        <p style="font-family:'Noto Serif Tamil',serif;font-size:1.3rem;line-height:2;color:var(--gold-light);margin-bottom:1.5rem;">${k.tamil}</p>
+        <p style="font-size:1rem;line-height:1.9;color:var(--parchment-mid);">${k.meaning}</p>
+        <div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid rgba(201,168,76,0.15);font-size:0.72rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold-dim);">
+          Book of ${k.book.charAt(0).toUpperCase()+k.book.slice(1)}
+        </div>
+      `;
+      document.getElementById('modalOverlay').classList.add('open');
+    }
+    function closeModal(e) {
+      if (e.target === document.getElementById('modalOverlay'))
+        document.getElementById('modalOverlay').classList.remove('open');
+    }
+    function closeModalBtn() {
+      document.getElementById('modalOverlay').classList.remove('open');
+    }
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') document.getElementById('modalOverlay').classList.remove('open');
+    });
+
+    /* ── Search ── */
+    function performSearch() {
+      const q = document.getElementById('searchInput').value.toLowerCase().trim();
+      const res = document.getElementById('searchResults');
+      if (!q) { res.innerHTML = ''; return; }
+      const found = kurals.filter(k =>
+        k.meaning.toLowerCase().includes(q) ||
+        k.chapter.toLowerCase().includes(q) ||
+        String(k.num) === q ||
+        k.book.includes(q)
+      );
+      if (!found.length) {
+        res.innerHTML = `<p style="color:var(--gold-dim);font-size:0.9rem;">No kurals found for "${q}".</p>`;
+        return;
+      }
+      res.innerHTML = found.map(k => `
+        <div onclick="openModal(${k.num})" style="padding:1.2rem;border:1px solid rgba(201,168,76,0.12);margin-bottom:1px;cursor:pointer;background:#13100a;transition:background 0.2s;" onmouseover="this.style.background='#18130d'" onmouseout="this.style.background='#13100a'">
+          <div style="font-size:0.7rem;letter-spacing:0.2em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:0.5rem;">Kural ${k.num} · ${k.chapter}</div>
+          <p style="font-size:0.95rem;color:var(--parchment-mid);line-height:1.7;">${k.meaning}</p>
+        </div>
+      `).join('');
+    }
+    document.getElementById('searchInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') performSearch();
+    });
+
+    /* ── Animated counter ── */
+    document.querySelectorAll('.stat-number').forEach(el => {
+      const target = parseInt(el.textContent.replace(/\D/g,''));
+      const suffix = el.textContent.replace(/[\d]/g,'');
+      let start = 0;
+      const step = Math.ceil(target / 60);
+      const timer = setInterval(() => {
+        start = Math.min(start + step, target);
+        el.textContent = start + suffix;
+        if (start >= target) clearInterval(timer);
+      }, 18);
+    });
+  </script>
+</body>
+</html>
